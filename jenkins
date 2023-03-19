@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+    stages {
+        stage("Build"){
+            steps {
+                script {
+                    echo "Info:Build Docker Image"
+                    sh "docker build -t nodejs-demo:latest ."
+                    echo "Info Docker Image Build"
+                }
+            }
+        }
+        stage("Deploy")
+        {
+            steps {
+                script {
+                    echo "Info:Running new Docker image"
+                    sh "docker rm -f nodejs-demo || true"
+                    sh "docker run --restart always -p 3000:3000 -d --name nodejs-demo:latest"
+                    echo "Info:Deployed"
+                }
+            }
+        }
+    }
+}
